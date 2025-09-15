@@ -1,5 +1,6 @@
 package br.com.ghmenezes.storefront.service;
 
+import br.com.ghmenezes.storefront.dto.ProductCreatedMessage;
 import br.com.ghmenezes.storefront.entity.ProductEntity;
 import br.com.ghmenezes.storefront.dto.ProductInfoDTO;
 
@@ -17,4 +18,6 @@ public interface ProductService {
     ProductInfoDTO findInfo(final UUID id);
 
     void purchase(final UUID id);
+
+    void saveProductFromQueue(ProductCreatedMessage product) throws Exception;
 }

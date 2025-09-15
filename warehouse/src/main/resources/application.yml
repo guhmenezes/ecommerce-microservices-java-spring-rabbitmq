@@ -30,10 +30,15 @@ spring:
     virtual-host: /
     queue:
       product-change-availability: product.change.availability.queue
+      product-created: product.created.queue
+      dead-letter: dead.letter.queue
     exchange:
-      product-change-availability: product.change.availability.exchange
+      product-events: product.events.exchange
+      dead-letter: dead.letter.exchange
     routing-key:
-      product-change-availability: product.change.availability.routing-key
+      product-change-availability: product.change.availability.routing.key
+      product-created: product.created.routing.key
+      dead-letter: dead.letter.routing.key
 storefront:
   base-path: http://storefrontapp:8081/storefront
 

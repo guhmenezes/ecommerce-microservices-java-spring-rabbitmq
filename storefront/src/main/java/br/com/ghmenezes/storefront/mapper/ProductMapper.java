@@ -4,7 +4,7 @@ import br.com.ghmenezes.storefront.controller.request.ProductSaveRequest;
 import br.com.ghmenezes.storefront.controller.response.ProductAvailableResponse;
 import br.com.ghmenezes.storefront.controller.response.ProductDetailsResponse;
 import br.com.ghmenezes.storefront.controller.response.ProductSavedResponse;
-import br.com.ghmenezes.storefront.dto.ProductDetailsDTO;
+import br.com.ghmenezes.storefront.dto.ProductCreatedMessage;
 import br.com.ghmenezes.storefront.entity.ProductEntity;
 import br.com.ghmenezes.storefront.dto.ProductInfoDTO;
 import org.mapstruct.Mapper;
@@ -22,6 +22,9 @@ public interface ProductMapper {
 
     @Mapping(target = "active", constant = "false")
     ProductEntity toEntity(final ProductSaveRequest request);
+
+    @Mapping(target = "active", constant = "false")
+    ProductEntity toEntity(final ProductCreatedMessage request);
 
     ProductSavedResponse toResponse(final ProductEntity entity);
 

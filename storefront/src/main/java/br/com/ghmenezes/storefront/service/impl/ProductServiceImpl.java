@@ -1,12 +1,16 @@
 package br.com.ghmenezes.storefront.service.impl;
 
+import br.com.ghmenezes.storefront.dto.ProductCreatedMessage;
 import br.com.ghmenezes.storefront.entity.ProductEntity;
 import br.com.ghmenezes.storefront.dto.ProductDetailsDTO;
 import br.com.ghmenezes.storefront.dto.ProductInfoDTO;
+import br.com.ghmenezes.storefront.exception.ProductAlreadyExistsException;
 import br.com.ghmenezes.storefront.mapper.ProductMapper;
 import br.com.ghmenezes.storefront.repository.ProductRepository;
 import br.com.ghmenezes.storefront.service.ProductService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -22,9 +26,22 @@ public class ProductServiceImpl implements ProductService {
     private final RestClient warehouseClient;
     private final ProductMapper mapper;
 
+    private final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
+
     @Override
     public ProductEntity save(ProductEntity entity) {
         return repository.save(entity);
+    }
+
+    @Override
+    public void saveProductFromQueue(ProductCreatedMessage product) {
+        if (repository.existsById(product.id())) {
+            throw new ProductAlreadyExistsException("Produto já existente: " + product.id());
+        }
+
+        var entity = mapper.toEntity(product);
+        repository.save(entity);
+        log.info("Produto recebido do RabbitMQ e salvo: ID={}, Nome={}", product.id(), product.name());
     }
 
     @Override

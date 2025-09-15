@@ -5,11 +5,13 @@ import br.com.ghmenezes.warehouse.dto.ProductStorefrontSavedDTO;
 import br.com.ghmenezes.warehouse.entity.ProductEntity;
 import br.com.ghmenezes.warehouse.mapper.ProductMapper;
 import br.com.ghmenezes.warehouse.repository.ProductRepository;
+import br.com.ghmenezes.warehouse.service.ProductProducer;
 import br.com.ghmenezes.warehouse.service.ProductService;
 import br.com.ghmenezes.warehouse.service.StockService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 
 import java.util.UUID;
 
@@ -21,6 +23,8 @@ public class ProductServiceImpl implements ProductService {
     private final StockService stockService;
     private final RestClient storefrontClient;
     private final ProductMapper mapper;
+
+    private final ProductProducer producer;
 
     @Override
     public ProductEntity save(ProductEntity entity) {
@@ -48,10 +52,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private void saveStorefront(ProductStorefrontSaveDTO dto) {
-        storefrontClient.post()
-                .uri("/products")
-                .body(dto)
-                .retrieve()
-                .body(ProductStorefrontSavedDTO.class);
+        try {
+            storefrontClient.post()
+                    .uri("/products")
+                    .body(dto)
+                    .retrieve()
+                    .body(ProductStorefrontSavedDTO.class);
+        } catch (RestClientException e){
+            producer.notifyProductCreated(dto);
+        }
     }
 }

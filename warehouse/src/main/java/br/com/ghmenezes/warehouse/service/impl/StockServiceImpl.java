@@ -5,8 +5,7 @@ import br.com.ghmenezes.warehouse.entity.StockEntity;
 import br.com.ghmenezes.warehouse.enums.StockStatus;
 import br.com.ghmenezes.warehouse.repository.ProductRepository;
 import br.com.ghmenezes.warehouse.repository.StockRepository;
-import br.com.ghmenezes.warehouse.service.ProductChangeAvailabilityProducer;
-import br.com.ghmenezes.warehouse.service.ProductService;
+import br.com.ghmenezes.warehouse.service.ProductProducer;
 import br.com.ghmenezes.warehouse.service.StockService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,7 @@ public class StockServiceImpl implements StockService {
 
     private final StockRepository repository;
     private final ProductRepository productRepository;
-    private final ProductChangeAvailabilityProducer producer;
+    private final ProductProducer producer;
 
     @Override
     public StockEntity save(StockEntity entity) {

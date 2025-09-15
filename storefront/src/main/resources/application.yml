@@ -28,8 +28,17 @@ spring:
     username: admin
     password: admin
     virtual-host: /
+    listener:
+      simple:
+        default-requeue-rejected: false
+      retry:
+        enabled: true
+        max-attempts: 3
+        initial-interval: 30s
+        multiplier: 2
     queue:
       product-change-availability: product.change.availability.queue
+      product-created: product.created.queue
 warehouse:
   base-path: http://warehouseapp:8080/warehouse
 
