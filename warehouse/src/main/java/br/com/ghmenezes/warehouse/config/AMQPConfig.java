@@ -14,6 +14,8 @@ import java.util.Map;
 @Configuration
 public class AMQPConfig {
 
+    @Value("${spring.rabbitmq.exchange.dead-letter}")
+    private String DEAD_LETTER_EXCHANGE;
     @Value("${spring.rabbitmq.routing-key.dead-letter}")
     private String DEAD_LETTER_ROUTING_KEY;
 
@@ -39,7 +41,7 @@ public class AMQPConfig {
     @Bean
     Queue productCreatedQueue(@Value("${spring.rabbitmq.queue.product-created}") final String name) {
         Map<String, Object> args = new HashMap<>();
-        args.put("x-dead-letter-exchange", "");
+        args.put("x-dead-letter-exchange", DEAD_LETTER_EXCHANGE);
         args.put("x-dead-letter-routing-key", DEAD_LETTER_ROUTING_KEY);
         return new Queue(name, true, false, false, args);
     }
@@ -51,6 +53,11 @@ public class AMQPConfig {
 
     @Bean
     TopicExchange productExchange(@Value("${spring.rabbitmq.exchange.product-events}") final String name) {
+        return new TopicExchange(name);
+    }
+
+    @Bean
+    TopicExchange deadLetterExchange(@Value("${spring.rabbitmq.exchange.dead-letter}") final String name) {
         return new TopicExchange(name);
     }
 

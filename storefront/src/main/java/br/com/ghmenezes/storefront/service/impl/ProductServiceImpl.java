@@ -35,13 +35,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void saveProductFromQueue(ProductCreatedMessage product) {
-        if (repository.existsById(product.id())) {
-            throw new ProductAlreadyExistsException("Produto já existente: " + product.id());
-        }
+        try {
+            if (repository.existsById(product.id())) {
+                throw new ProductAlreadyExistsException("Produto já existente: " + product.id());
+            }
 
-        var entity = mapper.toEntity(product);
-        repository.save(entity);
-        log.info("Produto recebido do RabbitMQ e salvo: ID={}, Nome={}", product.id(), product.name());
+            var entity = mapper.toEntity(product);
+            repository.save(entity);
+            log.info("Produto recebido do RabbitMQ e salvo: ID={}, Nome={}", product.id(), product.name());
+        } catch (Exception e){
+            log.error("Erro ao persistir produto: ID={}, Nome={}", product.id(), product.name());
+            throw e;
+        }
     }
 
     @Override

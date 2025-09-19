@@ -31,11 +31,12 @@ spring:
     listener:
       simple:
         default-requeue-rejected: false
-      retry:
-        enabled: true
-        max-attempts: 3
-        initial-interval: 30s
-        multiplier: 2
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 30s
+          max-interval: 120s
+          multiplier: 2
     queue:
       product-change-availability: product.change.availability.queue
       product-created: product.created.queue
